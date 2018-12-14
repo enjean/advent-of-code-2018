@@ -9,10 +9,9 @@ class WordMatcher {
   }
 
   def oneLetterDiff(word1: String, word2: String) : Boolean = {
-    word1.zipWithIndex.map {
-      case(char, index) => if (char == word2.charAt(index)) 1 else 0
+    val matchingCount = word1.zipWithIndex.count {
+      case (char, index) => char == word2.charAt(index)
     }
-      .sum == word1.length - 1
-
+    matchingCount == word1.length - 1
   }
 }
