@@ -10,9 +10,5 @@ object DayTwo extends App {
   println(analyses.count(_.hasTwo) * analyses.count(_.hasThree))
 
   val matchingIds = new WordMatcher().findCloseMatch(ids)
-  val partTwo = matchingIds.head.zipWithIndex.map {
-    case(char, index) => if (char == matchingIds.last.charAt(index)) char else ""
-  }
-      .mkString
-  println(partTwo)
+  println(matchingIds.head intersect matchingIds.last)
 }
