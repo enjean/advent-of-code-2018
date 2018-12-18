@@ -10,7 +10,9 @@ class LogAnalyzer {
 
   def findSleepiestMinuteForGuard(dailyLogs: Seq[DailyLog], guard: Int): Int = {
     dailyLogs.filter(_.guard == guard)
-
-    -1
+        .flatMap(_.sleepMinutesList)
+        .groupBy(identity)
+        .maxBy(_._2.size)
+        ._1
   }
 }

@@ -6,6 +6,6 @@ case class DailyLog(guard: Int, sleepPeriods: Seq[(Int, Int)]) {
   }
 
   def sleepMinutesList: Seq[Int] = {
-    Nil
+    sleepPeriods.flatMap(sp => sp._1 until sp._2)
   }
 }
