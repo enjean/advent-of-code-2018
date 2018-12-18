@@ -8,11 +8,20 @@ class LogAnalyzer {
         ._1
   }
 
-  def findSleepiestMinuteForGuard(dailyLogs: Seq[DailyLog], guard: Int): Int = {
-    dailyLogs.filter(_.guard == guard)
+  def findSleepiestMinuteForGuard(dailyLogs: Seq[DailyLog], guard: Int): (Int, Int) = {
+    val sleepiestCollection = dailyLogs.filter(_.guard == guard)
         .flatMap(_.sleepMinutesList)
         .groupBy(identity)
         .maxBy(_._2.size)
-        ._1
+
+    (sleepiestCollection._1, sleepiestCollection._2.size)
+  }
+
+  def findGuardWithSleepiestMinute(dailyLogs: Seq[DailyLog]) : (Int, Int) = {
+    val sleepiestMinutesPerGuard = dailyLogs.groupBy(_.guard)
+      .filter(dlByGuard => dlByGuard._2.map(_.minutesAsleep).sum > 0)
+      .map(guardLogs => (guardLogs._1, guardLogs._2.flatMap(_.sleepMinutesList).groupBy(identity).maxBy(_._2.size)))
+    val maxGuard = sleepiestMinutesPerGuard.maxBy(_._2._2.size)
+    (maxGuard._1, maxGuard._2._1)
   }
 }
