@@ -27,4 +27,8 @@ class GridAnalyzerTest extends FlatSpec with Matchers {
     gridAnalyzer.areaIsInfinite(grid, E) shouldBe false
     gridAnalyzer.areaIsInfinite(grid, F) shouldBe true
   }
+
+  "region size" must "be number of squares below total distance" in {
+    gridAnalyzer.findRegionSize(coords, 32) shouldBe 16
+  }
 }

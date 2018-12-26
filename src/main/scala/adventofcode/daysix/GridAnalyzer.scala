@@ -33,4 +33,16 @@ class GridAnalyzer {
             )
     }
   }
+
+  def findRegionSize(coordinates : Seq[Coordinate], limit: Int) : Int = {
+    val xCoords = coordinates.map(_.x)
+    val yCoords = coordinates.map(_.y)
+
+    val allCoords = for {
+      x <- 0 to xCoords.max
+      y <- 0 to yCoords.max
+    } yield Coordinate(x, y)
+
+    allCoords.map(_.totalDistance(coordinates)).count(_ < limit)
+  }
 }

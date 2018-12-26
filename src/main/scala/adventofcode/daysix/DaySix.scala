@@ -14,4 +14,5 @@ object DaySix extends App {
 
   val gridAnalyzer = new GridAnalyzer()
   println(s"Part One: Biggest area = ${gridAnalyzer.findLargestNonInfiniteArea(coordinates)}")
+  println(s"Part Two: Region size = ${gridAnalyzer.findRegionSize(coordinates, 10000)}")
 }

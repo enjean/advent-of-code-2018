@@ -10,4 +10,8 @@ case class Coordinate(x: Int, y: Int) {
     val minDistance = distanceToCoords.map(_._2).min
     distanceToCoords.filter(_._2 == minDistance).map(_._1)
   }
+
+  def totalDistance(to: Seq[Coordinate]): Int = {
+    to.map(manhattanDistance).sum
+  }
 }

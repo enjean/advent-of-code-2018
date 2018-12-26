@@ -38,4 +38,16 @@ class CoordinateTest extends FlatSpec with Matchers{
     Coordinate(7, 7).closestTo(coords) shouldBe Seq(F)
     Coordinate(5, 1).closestTo(coords) should contain theSameElementsAs Seq(A, E)
   }
+
+  "total distance" should "return sum of Manhattan distances" in {
+    val A = Coordinate(1, 1)
+    val B = Coordinate(1, 6)
+    val C = Coordinate(8, 3)
+    val D = Coordinate(3, 4)
+    val E = Coordinate(5, 5)
+    val F = Coordinate(8, 9)
+    val coords = Seq(A, B, C, D, E, F)
+
+    Coordinate(4, 3).totalDistance(coords) shouldBe 30
+  }
 }
