@@ -11,7 +11,7 @@ class InstructionOrdererTest extends FlatSpec with Matchers {
     //    Step B must be finished before step E can begin.
     //    Step D must be finished before step E can begin.
     //    Step F must be finished before step E can begin.
-    val instructions = Seq(
+    val instructions = InstructionSet(Seq(
       Instruction('C', 'A'),
       Instruction('C', 'F'),
       Instruction('A', 'B'),
@@ -19,7 +19,7 @@ class InstructionOrdererTest extends FlatSpec with Matchers {
       Instruction('B', 'E'),
       Instruction('D', 'E'),
       Instruction('F', 'E')
-    )
+    ))
 
     new InstructionOrderer().getStepOrder(instructions) shouldBe "CABDFE"
   }
