@@ -11,7 +11,6 @@ class TreeParser {
   private def parseNode(input: Seq[Int]): ParseResult = {
     input match {
       case numChildren :: numMetadata :: rest =>
-        //Iterator.iterate(rest)(_.take(1)).drop(numChildren).next()
         val childrenParseResult = (1 to numChildren).foldLeft(ParseState(rest, Seq())) {
           (parseState, _) =>
             val childParseResult = parseNode(parseState.remainingInput)

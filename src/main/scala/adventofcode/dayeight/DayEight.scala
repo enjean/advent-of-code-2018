@@ -11,4 +11,5 @@ object DayEight extends App{
 
   val root = new TreeParser().parseTree(input)
   println(s"Part One: ${root.metadataSum}")
+  println(s"Part Two: ${root.value}")
 }
