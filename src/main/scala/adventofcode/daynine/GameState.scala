@@ -10,9 +10,7 @@ case class GameState(marbles: List[Int], currentMarbleIndex : Int) {
   }
 
   def scoringMove : (GameState, Int) = {
-    val indexToRemove =
-      if (currentMarbleIndex > 7 ) currentMarbleIndex - 7
-      else marbles.size - (7 - currentMarbleIndex)
+    val indexToRemove = ((currentMarbleIndex - 7) + marbles.size) % marbles.size
     val valueRemoved = marbles(indexToRemove)
     val (front, back) = marbles.splitAt(indexToRemove)
     (GameState(front ++ back.tail, indexToRemove), valueRemoved)
