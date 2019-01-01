@@ -39,6 +39,6 @@ class WordFinderTest extends FlatSpec {
       Point(Position(-3,  6), Velocity(2, -1))))
 
     val result = new WordFinder().findGridShowingWord(skyGrid)
-    println(result.prettyPrint)
+    println(result._1.prettyPrint)
   }
 }

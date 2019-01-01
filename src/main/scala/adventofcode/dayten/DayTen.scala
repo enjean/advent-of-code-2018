@@ -13,6 +13,7 @@ object DayTen extends App{
     }
     .toSeq
 
-  val gridWithWord = new WordFinder().findGridShowingWord(SkyGrid(points))
-  println(gridWithWord.prettyPrint)
+  val gridWithWordResult = new WordFinder().findGridShowingWord(SkyGrid(points))
+  println(s"At second ${gridWithWordResult._2}")
+  println(gridWithWordResult._1.prettyPrint)
 }
