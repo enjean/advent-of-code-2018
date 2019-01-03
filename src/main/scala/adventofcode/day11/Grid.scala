@@ -18,7 +18,7 @@ case class Grid(serialNumber: Int) {
   }
 
   def findVariableAreOfHighestPower : (Int, Int, Int) = {
-    val powerLevelsMap = PowerLevelsMap(serialNumber)
+    val powerLevelsMap = SummedAreaTable(serialNumber)
 
     val maxPowerAtCoord: immutable.Seq[((Int, Int), (Int, Int))] = for(
       x <- 1 to 300;

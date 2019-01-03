@@ -9,7 +9,7 @@ class GridTest extends FlatSpec with Matchers {
   }
 
   "findVariableAreOfHighestPower" should "return coords and square size" in {
-    Grid(18).findVariableAreOfHighestPower shouldBe (33, 45, 16)
-    Grid(42).findVariableAreOfHighestPower shouldBe (21, 61, 12)
+    Grid(18).findVariableAreOfHighestPower shouldBe (90, 269, 16)
+    Grid(42).findVariableAreOfHighestPower shouldBe (232, 251, 12)
   }
 }
