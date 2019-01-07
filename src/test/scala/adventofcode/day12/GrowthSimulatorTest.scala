@@ -21,7 +21,7 @@ class GrowthSimulatorTest extends FlatSpec with Matchers {
       "###.#",
       "####.")
 
-    new GrowthSimulator().runSimulation(initialState, growthPatterns) shouldBe 325
+    new GrowthSimulator().runSimulation(Pots(initialState), growthPatterns, 20) shouldBe 325
 
   }
 }

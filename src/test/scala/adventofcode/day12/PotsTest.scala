@@ -4,15 +4,15 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class PotsTest extends FlatSpec with Matchers {
   "currentState" should "show LLCRR notation" in {
-    Pots(Set(2)).currentState(2) shouldBe "..#.."
-    Pots(Set(0, 1, 3, 4)).currentState(2) shouldBe "##.##"
-    Pots(Set(1, 2, 4)).currentState(2) shouldBe ".##.#"
-    Pots(Set(-1, 1)).currentState(0) shouldBe ".#.#."
+    Pots(Set(2L)).currentState(2) shouldBe "..#.."
+    Pots(Set(0L, 1L, 3L, 4L)).currentState(2) shouldBe "##.##"
+    Pots(Set(1L, 2L, 4L)).currentState(2) shouldBe ".##.#"
+    Pots(Set(-1L, 1L)).currentState(0) shouldBe ".#.#."
   }
 
   "willHavePlantInNextGen" should "return whether current state matches pattern" in {
-    Pots(Set(1, 2, 4)).willHavePlantInNextGen(2, Set(".##.#")) shouldBe true
-    Pots(Set(1, 2, 4)).willHavePlantInNextGen(3, Set(".##.#")) shouldBe false
+    Pots(Set(1L, 2L, 4L)).willHavePlantInNextGen(2, Set(".##.#")) shouldBe true
+    Pots(Set(1L, 2L, 4L)).willHavePlantInNextGen(3, Set(".##.#")) shouldBe false
   }
 
   "growGeneration" should "apply patterns" in {

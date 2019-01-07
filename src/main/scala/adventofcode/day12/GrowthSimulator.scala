@@ -1,16 +1,31 @@
 package adventofcode.day12
 
+import scala.annotation.tailrec
+
 class GrowthSimulator {
 
-  def runSimulation(initialState: String, growthPatterns: Set[String]): Int = {
-    val finalState = Iterator.iterate(Pots(initialState))(currentState => {
-      val nextState = currentState.growGeneration(growthPatterns)
-//      val prettyPrint = (-3 to 34).map(index => if (nextState.potsWithPlants.contains(index)) '#' else '.').mkString(" ")
-//      println(prettyPrint)
-      nextState
+  final def runSimulation(state: Pots, growthPatterns: Set[String], generationLimit: Long): Long = {
+    val result = simulationStep(state, growthPatterns, 0, generationLimit, 0, Seq())
+    if (result._2 == generationLimit) {
+      println("Using full result")
+      result._1
     }
-    )
-      .drop(20).next()
-    finalState.potsWithPlants.sum
+    else {
+      println("Extrapolating result")
+      result._1 + (generationLimit - result._2) * result._3
+    }
+  }
+
+  @tailrec
+  private def simulationStep(state: Pots, growthPatterns: Set[String], currentGeneration: Long, generationLimit: Long, previousSum: Long, previousDiffs: Seq[Long]) : (Long, Long, Long) = {
+    val sum = state.potsWithPlants.sum
+    val diff = sum - previousSum
+    val diffs = previousDiffs :+ diff
+    println(diffs)
+    if ((currentGeneration > 5 && diffs.distinct.size == 1) || currentGeneration == generationLimit) {
+      println(s"Cutting off calculation at generation $currentGeneration")
+      (sum, currentGeneration, diffs.distinct.head)
+    }
+    else simulationStep(state.growGeneration(growthPatterns), growthPatterns, currentGeneration + 1, generationLimit, sum, diffs.takeRight(5))
   }
 }
