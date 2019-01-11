@@ -8,12 +8,14 @@ case class Cart(heading: Direction, // N, E, W, S)
                ) {
 
   def moveTo(track: Char) : Cart = {
-    track match {
+    val result = track match {
       case '-' | '|' => this
       case '/' => moveToSlash
       case '\\' => moveToBackslash
       case '+' => moveToIntersection
     }
+    //println(s"$this moveTo $track = $result")
+    result
   }
 
   private def moveToSlash : Cart = {
@@ -59,6 +61,15 @@ case class Cart(heading: Direction, // N, E, W, S)
       case Left => Straight
       case Straight => Right
       case Right => Left
+    }
+  }
+
+  def toChar: Char = {
+    heading match {
+      case Direction.North => '^'
+      case Direction.East => '>'
+      case Direction.South => 'v'
+      case Direction.West => '<'
     }
   }
 }
