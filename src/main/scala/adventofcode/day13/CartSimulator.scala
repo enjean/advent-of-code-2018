@@ -62,16 +62,6 @@ class CartSimulator {
           // cart has been removed due to collision
           acc
         }
-
-//
-//
-//
-//        else {
-//          val newPosition = movedCart._1
-//          val isCollision = acc._1.map(ccMap => ccMap._1).contains(newPosition)
-//          val collisions = if (isCollision) existingCollisions :+ newPosition else existingCollisions
-//          ((acc._1 :+ movedCart).filterNot(isCollision && _._1 == newPosition), collisions)
-//        }
     }
   }
 
