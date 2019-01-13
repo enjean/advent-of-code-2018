@@ -15,4 +15,11 @@ class RecipeFinderTest extends FlatSpec with Matchers {
    recipeFinder.findNext10Recipes(18) shouldBe "9251071085"
    recipeFinder.findNext10Recipes(2018) shouldBe "5941429882"
  }
+
+  "findLeftOfPattern" should "return number of recipes observed before pattern found" in {
+    recipeFinder.findLeftOfPattern("51589") shouldBe 9
+    recipeFinder.findLeftOfPattern("01245") shouldBe 5
+    recipeFinder.findLeftOfPattern("92510") shouldBe 18
+    recipeFinder.findLeftOfPattern("59414") shouldBe 2018
+  }
 }
