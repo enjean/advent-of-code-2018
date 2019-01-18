@@ -18,7 +18,7 @@ class RecipeFinder {
 
   def findLeftOfPattern(pattern: String):Int = {
     val recipeState = findLeftOfPattern(pattern, RecipeState(Vector(3, 7), 0, 1))
-    recipeState.recipes.mkString.indexOf(pattern)
+    recipeState.recipes.size - pattern.length
   }
 
   @tailrec
