@@ -51,9 +51,7 @@ class ArenaTest extends WordSpec with Matchers {
         "#######"
       )).nearestInRangeSquareSearch(
         UnitType.Goblin,
-        Seq(Coordinate(1, 1) -> 0),
-        Set(),
-        Seq()
+        Coordinate(1, 1)
       ) should contain theSameElementsAs Seq(
         Coordinate(3, 1),
         Coordinate(2, 2),
@@ -70,9 +68,7 @@ class ArenaTest extends WordSpec with Matchers {
         "#######"
       )).nearestInRangeSquareSearch(
         UnitType.Goblin,
-        Seq(Coordinate(1, 1) -> 0),
-        Set(),
-        Seq()
+        Coordinate(1, 1)
       ) shouldBe Nil
     }
 
@@ -85,9 +81,7 @@ class ArenaTest extends WordSpec with Matchers {
         "#######"
       )) nearestInRangeSquareSearch(
         UnitType.Goblin,
-        Seq(Coordinate(1, 1) -> 0),
-        Set(),
-        Seq()
+        Coordinate(1, 1)
       ) shouldBe Nil
     }
   }
@@ -125,37 +119,37 @@ class ArenaTest extends WordSpec with Matchers {
     }
   }
 
-  "distanceTo" should {
-    val arena = arenaParser.parseArena(List(
-      "#######",
-      "#.E...#",
-      "#.....#",
-      "#...G.#",
-      "#######"
-    ))
-
-    "return shortest distance to target from 1,1" in {
-      arena.distanceTo(Coordinate(1, 1), Coordinate(4, 2)) shouldBe Some(4)
-    }
-
-    "return shortest distance to target from 3,1" in {
-      arena.distanceTo(Coordinate(3, 1), Coordinate(4, 2)) shouldBe Some(2)
-    }
-
-    "return shortest distance to target from 2,2" in {
-      arena.distanceTo(Coordinate(2, 2), Coordinate(4, 2)) shouldBe Some(2)
-    }
-
-    "handle dead ends" in {
-      arenaParser.parseArena(List(
-        "#######",
-        "#.E...#",
-        "#.#...#",
-        "#.#.G.#",
-        "#######"
-      )).distanceTo(Coordinate(1, 1), Coordinate(4, 2)) shouldBe None
-    }
-  }
+//  "distanceTo" should {
+//    val arena = arenaParser.parseArena(List(
+//      "#######",
+//      "#.E...#",
+//      "#.....#",
+//      "#...G.#",
+//      "#######"
+//    ))
+//
+//    "return shortest distance to target from 1,1" in {
+//      arena.distanceTo(Coordinate(1, 1), Coordinate(4, 2)) shouldBe Some(4)
+//    }
+//
+//    "return shortest distance to target from 3,1" in {
+//      arena.distanceTo(Coordinate(3, 1), Coordinate(4, 2)) shouldBe Some(2)
+//    }
+//
+//    "return shortest distance to target from 2,2" in {
+//      arena.distanceTo(Coordinate(2, 2), Coordinate(4, 2)) shouldBe Some(2)
+//    }
+//
+//    "handle dead ends" in {
+//      arenaParser.parseArena(List(
+//        "#######",
+//        "#.E...#",
+//        "#.#...#",
+//        "#.#.G.#",
+//        "#######"
+//      )).distanceTo(Coordinate(1, 1), Coordinate(4, 2)) shouldBe None
+//    }
+//  }
 
   "findNextStepTowards" should {
     "return next step along shortest path in reading order" in {

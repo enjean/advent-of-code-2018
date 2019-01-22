@@ -12,19 +12,25 @@ case class Arena(units: Map[Coordinate, FightingUnit], map: Map[Coordinate, Char
 
   def findClosestInRangeSquare(start: Coordinate, unitType: UnitType): Option[Coordinate] = {
     println(s"Finding closest in range square to $start")
-    val nearestInRangeSquares = nearestInRangeSquareSearch(
-      unitType,
-      Seq(start -> 0),
-      Set(),
-      Seq()
-    )
+    val nearestInRangeSquares = nearestInRangeSquareSearch(unitType, start)
     if (nearestInRangeSquares.nonEmpty) Some(nearestInRangeSquares.minBy(c => (c.y, c.x)))
     else None
   }
 
-  def nearestInRangeSquareSearch(unitType: UnitType,
-                                 coordinatesToProcess: Seq[(Coordinate, Int)],
+  def nearestInRangeSquareSearch(unitType: UnitType, start: Coordinate): Seq[Coordinate] = {
+    def squareIsInRangeOfType(c: Coordinate) : Boolean = squareIsInRangeOf(c, unitType)
+    nearestMatchingSquareSearch(
+      Seq(start -> 0),
+      Set(),
+      squareIsInRangeOfType,
+      Seq()
+    )
+  }
+
+  @tailrec
+  final def nearestMatchingSquareSearch(coordinatesToProcess: Seq[(Coordinate, Int)],
                                  alreadyProcessed: Set[Coordinate],
+                                 coordinateIsMatch: Coordinate => Boolean,
                                  closestFoundSoFar: Seq[(Coordinate, Int)]): Seq[Coordinate] = {
 
     if (coordinatesToProcess.isEmpty) closestFoundSoFar.map(_._1)
@@ -39,16 +45,16 @@ case class Arena(units: Map[Coordinate, FightingUnit], map: Map[Coordinate, Char
           .filterNot(alreadyProcessed.contains)
           .map(_ -> (coordinateToConsider._2 + 1))
 
-        val newFoundSoFar = if (squareIsInRangeOf(coordinateToConsider._1, unitType)) {
+        val newFoundSoFar = if (coordinateIsMatch(coordinateToConsider._1)) {
           closestFoundSoFar :+ coordinateToConsider
         }
         else {
           closestFoundSoFar
         }
 
-        nearestInRangeSquareSearch(unitType,
-          coordinatesToProcess.tail ++ newCoordinatesToProcess,
+        nearestMatchingSquareSearch(coordinatesToProcess.tail ++ newCoordinatesToProcess,
           alreadyProcessed + coordinateToConsider._1,
+          coordinateIsMatch,
           newFoundSoFar)
       }
     }
@@ -59,33 +65,14 @@ case class Arena(units: Map[Coordinate, FightingUnit], map: Map[Coordinate, Char
   }
 
   def findNextStepTowards(start: Coordinate, target: Coordinate): Coordinate = {
-    val distancesToFromNeighbors = availableAdjacent(start)
-      .map(c => c -> distanceTo(c, target))
-    distancesToFromNeighbors
-      .filter(_._2.isDefined)
-      .minBy(c => (c._2, c._1.y, c._1.x))
-      ._1
-  }
-
-  def distanceTo(from: Coordinate, to: Coordinate): Option[Int] = {
-    distanceTo(from, to, Set())
-  }
-
-  def distanceTo(from: Coordinate, to: Coordinate, onPath: Set[Coordinate]): Option[Int] = {
-    if (from == to) Some(0)
-    else {
-      val nextLevel = availableAdjacent(from)
-        .filterNot(onPath.contains)
-      if (nextLevel.isEmpty) None
-      else {
-        val childDistances = nextLevel
-          .flatMap(adj => distanceTo(adj, to, onPath + from).map(_ + 1))
-
-        println(s"$from $onPath $nextLevel $childDistances")
-        if (childDistances.nonEmpty) Some(childDistances.min)
-        else None
-      }
-    }
+    def adjacentToStart(coordinate: Coordinate):Boolean = start.adjacent.contains(coordinate)
+    val nearestAdjacentSquaresToTarget = nearestMatchingSquareSearch(
+      Seq(target -> 0),
+      Set(),
+      adjacentToStart,
+      Seq()
+    )
+    nearestAdjacentSquaresToTarget.minBy(c => (c.y, c.x))
   }
 
   def availableAdjacent(coordinate: Coordinate): Seq[Coordinate] =
@@ -94,16 +81,16 @@ case class Arena(units: Map[Coordinate, FightingUnit], map: Map[Coordinate, Char
       .filterNot(c => units.contains(c))
 
   def moveUnit(unitLocation: Coordinate): (Arena, Coordinate) = {
-    println(s"Moving $unitLocation")
+//    println(s"Moving $unitLocation")
     val unitToMove = units(unitLocation)
     if (isInRange(unitLocation, unitToMove.opponentType) || !isInRangeSquare(unitToMove.opponentType)) {
       (this, unitLocation)
     }
     else {
       val targetSquare = findClosestInRangeSquare(unitLocation, unitToMove.opponentType)
-      println(s"Moving towards $targetSquare")
+//      println(s"Moving towards $targetSquare")
       val newLocation = targetSquare.map(square => findNextStepTowards(unitLocation, square)).getOrElse(unitLocation)
-      println(s"Taking step to $newLocation")
+//      println(s"Taking step to $newLocation")
       val newUnits = units - unitLocation + (newLocation -> unitToMove)
       (this.copy(units = newUnits), newLocation)
     }

@@ -10,7 +10,7 @@ class FightSimulator {
 
   @tailrec
   private def battleRound(arena: Arena, round: Int) : (Arena, Int) = {
-    println(s"Battle Round $round")
+//    println(s"Battle Round $round")
     val roundResult = performRound(arena)
     if (roundResult._2) {
       (roundResult._1, round - 1)
