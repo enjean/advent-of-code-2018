@@ -4,14 +4,15 @@ import adventofcode.day15.UnitType.UnitType
 
 import scala.annotation.tailrec
 
-case class Arena(units: Map[Coordinate, FightingUnit], map: Map[Coordinate, Char]) {
+case class Arena(units: Map[Coordinate, FightingUnit], map: Map[Coordinate, Char],
+                 attackStrengths: Map[UnitType, Int] = Map(UnitType.Elf -> 3, UnitType.Goblin -> 3)) {
 
   def hasUnitOfType(unitType: UnitType) : Boolean = {
     units.exists(_._2.unitType == unitType)
   }
 
   def findClosestInRangeSquare(start: Coordinate, unitType: UnitType): Option[Coordinate] = {
-    println(s"Finding closest in range square to $start")
+//    println(s"Finding closest in range square to $start")
     val nearestInRangeSquares = nearestInRangeSquareSearch(unitType, start)
     if (nearestInRangeSquares.nonEmpty) Some(nearestInRangeSquares.minBy(c => (c.y, c.x)))
     else None
@@ -116,7 +117,7 @@ case class Arena(units: Map[Coordinate, FightingUnit], map: Map[Coordinate, Char
       .map(ao => ao._1 -> ao._2.get)
     if (adjacentOpponents.nonEmpty) {
       val opponentToFight = adjacentOpponents.minBy(opp => (opp._2.hitPoints, opp._1.y, opp._1.x))
-      val opponentAfterAttack = opponentToFight._2.takeDamage(3)
+      val opponentAfterAttack = opponentToFight._2.takeDamage(attackStrengths(unitToFight.unitType))
       val unitsAfterAttack = if (opponentAfterAttack.hitPoints <= 0) units - opponentToFight._1
       else units + (opponentToFight._1 -> opponentAfterAttack)
       this.copy(units = unitsAfterAttack)
@@ -127,4 +128,20 @@ case class Arena(units: Map[Coordinate, FightingUnit], map: Map[Coordinate, Char
   }
 
   def score : Int = units.map(_._2.hitPoints).sum
+
+  def withElfAttackPower(value: Int): Arena = this.copy(attackStrengths = this.attackStrengths + (UnitType.Elf -> value))
+
+  def prettyPrint = {
+    val maxX = map.keys.map(_.x).max
+    val maxY = map.keys.map(_.y).max
+
+    (0 to maxY).foreach { y =>
+      val mapLine = (0 to maxX).foldLeft("") {
+        (lineSoFar, x) =>
+          lineSoFar + units.get(Coordinate(x, y)).map(_.toChar).getOrElse(map(Coordinate(x, y)))
+      }
+      val unitLine = units.filter(_._1.y == y).toList.sortBy(_._1.x).map(u => s"${u._2.toChar}(${u._2.hitPoints})").mkString(",")
+      println(s"$mapLine $unitLine")
+    }
+  }
 }

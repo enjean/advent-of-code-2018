@@ -498,4 +498,173 @@ class FightSimulatorTest extends WordSpec with Matchers {
       result._2 shouldBe 20
     }
   }
+
+  "findWinningScenarioForElves" should {
+    "example 1" in {
+      //      In the first summarized example above, the lowest attack power the Elves need to win without losses is 15:
+      //      #######       #######
+      //      #.G...#       #..E..#   E(158)
+      //      #...EG#       #...E.#   E(14)
+      //      #.#.#G#  -->  #.#.#.#
+      //      #..G#E#       #...#.#
+      //      #.....#       #.....#
+      //      #######       #######
+      //
+      //      Combat ends after 29 full rounds
+      //      Elves win with 172 total hit points left
+      //      Outcome: 29 * 172 = 4988
+
+      val initialArena = arenaParser.parseArena(List(
+        "#######",
+        "#.G...#",
+        "#...EG#",
+        "#.#.#G#",
+        "#..G#E#",
+        "#.....#",
+        "#######"
+      ))
+
+      val result = fightSimulator.findWinningScenarioForElves(initialArena)
+      result._1._1.units shouldBe Map(
+        Coordinate(3, 1) -> FightingUnit(UnitType.Elf, 158),
+        Coordinate(4, 2) -> FightingUnit(UnitType.Elf, 14)
+      )
+      result._1._2 shouldBe 29
+      result._2 shouldBe 15
+    }
+
+    "example 2" in {
+      //      In the second example above, the Elves need only 4 attack power:
+      //
+      //      #######       #######
+      //      #E..EG#       #.E.E.#   E(200), E(23)
+      //      #.#G.E#       #.#E..#   E(200)
+      //      #E.##E#  -->  #E.##E#   E(125), E(200)
+      //      #G..#.#       #.E.#.#   E(200)
+      //      #..E#.#       #...#.#
+      //      #######       #######
+      //
+      //      Combat ends after 33 full rounds
+      //      Elves win with 948 total hit points left
+      //      Outcome: 33 * 948 = 31284
+      val initialArena = arenaParser.parseArena(List(
+        "#######",
+        "#E..EG#",
+        "#.#G.E#",
+        "#E.##E#",
+        "#G..#.#",
+        "#..E#.#",
+        "#######"
+      ))
+
+      val result = fightSimulator.findWinningScenarioForElves(initialArena)
+      result._1._1.units shouldBe Map(
+        Coordinate(2, 1) -> FightingUnit(UnitType.Elf, 200),
+        Coordinate(4, 1) -> FightingUnit(UnitType.Elf, 23),
+        Coordinate(3, 2) -> FightingUnit(UnitType.Elf, 200),
+        Coordinate(1, 3) -> FightingUnit(UnitType.Elf, 125),
+        Coordinate(5, 3) -> FightingUnit(UnitType.Elf, 200),
+        Coordinate(2, 4) -> FightingUnit(UnitType.Elf, 200),
+      )
+      result._1._2 shouldBe 33
+      result._2 shouldBe 4
+    }
+
+    "In the third example above, the Elves need 15 attack power" in {
+
+      //    #######       #######
+      //    #E.G#.#       #.E.#.#   E(8)
+      //    #.#G..#       #.#E..#   E(86)
+      //    #G.#.G#  -->  #..#..#
+      //    #G..#.#       #...#.#
+      //    #...E.#       #.....#
+      //    #######       #######
+      //
+      //    Combat ends after 37 full rounds
+      //    Elves win with 94 total hit points left
+      //    Outcome: 37 * 94 = 3478
+      val initialArena = arenaParser.parseArena(List(
+        "#######",
+        "#E.G#.#",
+        "#.#G..#",
+        "#G.#.G#",
+        "#G..#.#",
+        "#...E.#",
+        "#######"
+      ))
+
+      val result = fightSimulator.findWinningScenarioForElves(initialArena)
+      result._1._1.units shouldBe Map(
+        Coordinate(2, 1) -> FightingUnit(UnitType.Elf, 8),
+        Coordinate(3, 2) -> FightingUnit(UnitType.Elf, 86)
+      )
+      result._1._2 shouldBe 37
+      result._2 shouldBe 15
+    }
+
+    "In the fourth example above, the Elves need 12 attack power" in {
+      //      #######       #######
+      //      #.E...#       #...E.#   E(14)
+      //      #.#..G#       #.#..E#   E(152)
+      //      #.###.#  -->  #.###.#
+      //      #E#G#G#       #.#.#.#
+      //      #...#G#       #...#.#
+      //      #######       #######
+      //
+      //      Combat ends after 39 full rounds
+      //      Elves win with 166 total hit points left
+      //      Outcome: 39 * 166 = 6474
+      val initialArena = arenaParser.parseArena(List(
+        "#######",
+        "#.E...#",
+        "#.#..G#",
+        "#.###.#",
+        "#E#G#G#",
+        "#...#G#",
+        "#######"
+      ))
+
+      val result = fightSimulator.findWinningScenarioForElves(initialArena)
+      result._2 shouldBe 12
+      result._1._1.units shouldBe Map(
+        Coordinate(4, 1) -> FightingUnit(UnitType.Elf, 14),
+        Coordinate(5, 2) -> FightingUnit(UnitType.Elf, 152)
+      )
+      result._1._2 shouldBe 39
+    }
+
+    "In the last example above, the lone Elf needs 34 attack power" in {
+//      #########       #########
+//      #G......#       #.......#
+//      #.E.#...#       #.E.#...#   E(38)
+//      #..##..G#       #..##...#
+//      #...##..#  -->  #...##..#
+//      #...#...#       #...#...#
+//      #.G...G.#       #.......#
+//      #.....G.#       #.......#
+//      #########       #########
+//
+//      Combat ends after 30 full rounds
+//      Elves win with 38 total hit points left
+//      Outcome: 30 * 38 = 1140
+      val initialArena = arenaParser.parseArena(List(
+        "#########",
+        "#G......#",
+        "#.E.#...#",
+        "#..##..G#",
+        "#...##..#",
+        "#...#...#",
+        "#.G...G.#",
+        "#.....G.#",
+        "#########"
+      ))
+
+      val result = fightSimulator.findWinningScenarioForElves(initialArena)
+      result._2 shouldBe 34
+      result._1._1.units shouldBe Map(
+        Coordinate(2, 2) -> FightingUnit(UnitType.Elf, 38),
+      )
+      result._1._2 shouldBe 30
+    }
+  }
 }

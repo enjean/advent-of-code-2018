@@ -23,7 +23,9 @@ class FightSimulator {
   def performRound(arena: Arena) : (Arena, Boolean) = {
     val unitsToMove = arena.units.toList
         .sortBy(cu => (cu._1.y, cu._1.x))
-    performMoveOfRound(arena, unitsToMove.map(_._1))
+    val result = performMoveOfRound(arena, unitsToMove.map(_._1))
+    //result._1.prettyPrint
+    result
   }
 
   @tailrec
@@ -46,5 +48,19 @@ class FightSimulator {
         (arena, true)
       }
     }
+  }
+
+  def findWinningScenarioForElves(arena: Arena) : ((Arena, Int), Int) = {
+    val initialElfCount = arena.units.values.count(_.unitType == UnitType.Elf)
+    Iterator.iterate((battle(arena.withElfAttackPower(3)), 3)) {
+      case (a, elfPower) => {
+        (battle(arena.withElfAttackPower(elfPower + 1)), elfPower + 1)
+      }
+    }
+      .dropWhile { roundResult =>
+        println(s"With power ${roundResult._2}, after ${roundResult._1._2} result ${roundResult._1._1.units}")
+        roundResult._1._1.units.values.count(_.unitType == UnitType.Elf) != initialElfCount
+      }
+      .next()
   }
 }
