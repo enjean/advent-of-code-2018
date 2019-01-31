@@ -23,6 +23,20 @@ object Day16 extends App {
 
   val operationAnalyzer = new OperationAnalyzer()
 
-  val count = samples.count(sample => operationAnalyzer.possibleOperations(sample).size >= 3)
-  println(s"Part One: $count")
+//  val count = samples.count(sample => operationAnalyzer.possibleOperations(sample).size >= 3)
+//  println(s"Part One: $count")
+
+  val operationMap = operationAnalyzer.operationMap(samples)
+  println(s"$operationMap")
+
+  val instructions = Source.fromFile("src/main/resources/day16/Part2Input.txt").getLines()
+    .map {
+      case instructionRegex(opcode, a, b, c) => Instruction(opcode.toInt, InstructionArgs(a.toInt, b.toInt, c.toInt))
+    }.toList
+
+  val result = instructions.foldLeft(Vector(0, 0, 0, 0)) {
+    (registers, instruction) =>
+      OperationSet.operationMap(operationMap(instruction.opcode)).apply(registers, instruction.instructionArgs)
+  }
+  println(s"Part Two: $result")
 }
